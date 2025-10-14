@@ -6,7 +6,7 @@ services:
     image: postgres:15-alpine # Utilisation de l'image officielle PostgreSQL 
     container_name: cookbook-db
     ports:
-      - "5432:5432"
+      - "5438:5432"
     healthcheck:
       test: ["CMD-SHELL", "sh -c 'pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB'"]
       interval: 10s
@@ -29,7 +29,7 @@ services:
     volumes:
       - ./backend:/app
     ports:
-      - "8000:8000" # Mappe le port 8000 de l'hôte au port 8000 du conteneur
+      - "8008:8000" # Mappe le port 8000 de l'hôte au port 8000 du conteneur
     env_file:
       - ./backend/.env
     depends_on:
@@ -46,7 +46,7 @@ services:
       dockerfile: Dockerfile
     container_name: cookbook-frontend
     ports:
-      - "5173:5173" # Mappe le port 5173 de l'hôte au port 5173 de Vite
+      - "5178:5173" # Mappe le port 5173 de l'hôte au port 5173 de Vite
     volumes:
       # Monte le code source pour le HMR
       - ./frontend:/app
