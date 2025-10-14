@@ -16,7 +16,7 @@ export default defineConfig({
     port: 5173, // Le port sur lequel Vite doit tourner
     // Nécessaire pour que le HMR fonctionne correctement avec Docker
     hmr: {
-      clientPort: 5173,
+      clientPort: 5178,
     },
   },
 })
