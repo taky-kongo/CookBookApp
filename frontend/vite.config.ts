@@ -13,10 +13,10 @@ export default defineConfig({
   },
   server: {
     host: true, // Écoute sur toutes les adresses, équivalent à --host
-    port: 5178, // Le port sur lequel Vite doit tourner
+    port: 5173, // Le port sur lequel Vite doit tourner
     // Nécessaire pour que le HMR fonctionne correctement avec Docker
     hmr: {
-      clientPort: 5178,
+      clientPort: 5173,
     },
   },
 })

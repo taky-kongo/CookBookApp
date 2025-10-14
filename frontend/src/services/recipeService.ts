@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // L'URL de base de l'API, lue depuis les variables d'environnement de Vite
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8008/api/v1';
 
 // Définition du type pour une recette, pour la sécurité de typage avec TypeScript
 export interface Recipe {

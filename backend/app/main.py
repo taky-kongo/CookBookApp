@@ -13,9 +13,10 @@ app = FastAPI(
 # Essentiel pour que le frontend (localhost:3000) puisse communiquer avec le backend
 origins = [
     "http://localhost:5173",
-    "http://localhost:5175",
+    "http://localhost:5174",
     "http://localhost:5178",
-    "http://localhost:3000", # Au cas où vous changeriez de port
+    "http://127.0.0.1:5173",
+    "http://127.0.0.1:5174",
 ]
 
 app.add_middleware(
