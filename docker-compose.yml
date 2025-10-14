@@ -1,0 +1,62 @@
+services:
+  # ----------------------------------------
+  # 1. Base de Données PostgreSQL
+  # ----------------------------------------
+  db:
+    image: postgres:15-alpine # Utilisation de l'image officielle PostgreSQL 
+    container_name: cookbook-db
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "sh -c 'pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB'"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    env_file:
+      - ./backend/.env # Récupère les variables POSTGRES_*
+    volumes:
+      # Volume persistant pour ne pas perdre les données lors du redémarrage [cite: 24]
+      - postgres_data:/var/lib/postgresql/data/
+
+  # ----------------------------------------
+  # 2. Backend FastAPI
+  # ----------------------------------------
+  backend:
+    build:
+      context: ./backend # Utilise le Dockerfile dans le dossier backend
+      dockerfile: Dockerfile
+    container_name: cookbook-backend
+    volumes:
+      - ./backend:/app
+    ports:
+      - "8000:8000" # Mappe le port 8000 de l'hôte au port 8000 du conteneur
+    env_file:
+      - ./backend/.env
+    depends_on:
+      db:
+        condition: service_healthy # Attend que la BDD soit saine (nécessite healthcheck sur db, non inclus ici pour la simplicité, mais le 'restart: always' aide)
+    restart: always # Redémarre si le service plante (utile si db n'est pas encore prêt)
+
+  # ----------------------------------------
+  # 3. Frontend React/Vite
+  # ----------------------------------------
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: cookbook-frontend
+    ports:
+      - "5173:5173" # Mappe le port 5173 de l'hôte au port 5173 de Vite
+    volumes:
+      # Monte le code source pour le HMR
+      - ./frontend:/app
+      # Empêche le node_modules local d'écraser celui du conteneur
+      - /app/node_modules
+    environment:
+      # Variable d'environnement pour que le frontend sache où appeler l'API
+      VITE_API_URL: http://localhost:8000/api/v1 
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
