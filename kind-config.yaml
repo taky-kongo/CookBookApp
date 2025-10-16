@@ -15,8 +15,8 @@ nodes:
     hostPort: 8090
     listenAddress: "0.0.0.0"
     protocol: TCP
-  # Map port 443 on the host to port 8443 on the node (for HTTPS)
+  # Map port 443 on the host to port 9443 on the node (for HTTPS)
   - containerPort: 443
-    hostPort: 8443
+    hostPort: 9443
     listenAddress: "0.0.0.0"
     protocol: TCP
