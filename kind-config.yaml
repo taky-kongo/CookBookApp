@@ -10,13 +10,13 @@ nodes:
       kubeletExtraArgs:
         node-labels: "ingress-ready=true"
   extraPortMappings:
-  # Map port 80 on the host to port 80 on the node (for HTTP)
+  # Map port 80 on the host to port 8090 on the node (for HTTP)
   - containerPort: 80
-    hostPort: 80
+    hostPort: 8090
     listenAddress: "0.0.0.0"
     protocol: TCP
-  # Map port 443 on the host to port 443 on the node (for HTTPS)
+  # Map port 443 on the host to port 8443 on the node (for HTTPS)
   - containerPort: 443
-    hostPort: 443
+    hostPort: 8443
     listenAddress: "0.0.0.0"
     protocol: TCP
