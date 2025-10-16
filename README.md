@@ -21,6 +21,7 @@ Bienvenue dans l'application CookBook ! [cite_start]Ce projet est une applicatio
 ├── docker-compose.yml  # Déploiement de développement local (Compose)
 └── README.md
 
+
 ## 🛠️ Instructions de Démarrage
 
 ### Mode 1 : Développement Local Simplifié (Docker Compose)
