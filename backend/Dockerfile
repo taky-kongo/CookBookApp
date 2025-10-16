@@ -1,9 +1,9 @@
 # 1. Image de base: Python 3.11 slim pour une image plus légère
-FROM python:3.11-slim as build-stage
+FROM python:3.11-slim AS build-stage
 
 # Définition des variables d'environnement (non-sensibles)
-ENV PYTHONUNBUFFERED 1
-ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE=1
 
 # Création et définition du répertoire de travail
 WORKDIR /app

@@ -5,6 +5,8 @@ import tailwindcss from '@tailwindcss/vite'
 
 // https://vite.dev/config/
 export default defineConfig({
+  // CORRECTION : Utiliser des chemins relatifs pour les assets (JS, CSS)
+  base: './',
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
@@ -12,11 +14,10 @@ export default defineConfig({
     },
   },
   server: {
-    host: true, // Écoute sur toutes les adresses, équivalent à --host
-    port: 5173, // Le port sur lequel Vite doit tourner
-    // Nécessaire pour que le HMR fonctionne correctement avec Docker
+    host: true,
+    port: 5178,
     hmr: {
-      clientPort: 5178,
+      port: 5178,
     },
   },
 })

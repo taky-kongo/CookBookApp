@@ -1,0 +1,65 @@
+# k8s/backend.yaml
+
+# 1. Deployment du Backend FastAPI
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cookbook-backend-deployment
+spec:
+  # Maintenir 2 réplicas comme souhaité
+  replicas: 2 
+  selector:
+    matchLabels:
+      app: cookbook-backend
+  template:
+    metadata:
+      labels:
+        app: cookbook-backend
+    spec:
+      containers:
+        - name: backend
+          image: cookbook-app-backend:latest # Image chargée précédemment
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8000
+          env:
+            # CORRECTION CRUCIALE : La DATABASE_URL complète est requise par Pydantic/Settings
+            # Le format est : postgresql+psycopg2://USER:PASSWORD@SERVICE_NAME:PORT/DB_NAME
+            # Nous utilisons les valeurs définies dans le Secret et le Service K8s.
+            - name: DATABASE_URL
+              # NOTE : C'est la façon la plus simple de le définir dans le YAML K8s sans Templating.
+              # Assurez-vous que ces valeurs correspondent à celles de k8s/config.yaml Secret.
+              value: "postgresql+psycopg2://cookbook_user:strong_password@postgres-service:5432/cookbook_db"
+            
+            # Suppression des variables POSTGRES_* individuelles pour éviter la redondance
+            # si elles ne sont utilisées que par Pydantic, qui utilise maintenant DATABASE_URL.
+
+          # Ajoutez un Liveness et Readiness probe (Health Checks)
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8000
+            initialDelaySeconds: 15
+            periodSeconds: 10
+
+---
+
+# 2. Service pour exposer le Backend à l'intérieur du cluster
+apiVersion: v1
+kind: Service
+metadata:
+  name: cookbook-backend-service
+spec:
+  selector:
+    app: cookbook-backend
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000
+  type: ClusterIP

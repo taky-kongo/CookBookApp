@@ -1,0 +1,46 @@
+# k8s/frontend.yaml
+
+# 1. Deployment du Frontend React/Vite
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cookbook-frontend-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cookbook-frontend
+  template:
+    metadata:
+      labels:
+        app: cookbook-frontend
+    spec:
+      containers:
+        - name: frontend
+          image: cookbook-app-frontend:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+          env:
+            - name: VITE_API_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: API_V1_URL
+
+---
+
+# 2. Service pour exposer le Frontend à l'intérieur du cluster
+apiVersion: v1
+kind: Service
+metadata:
+  name: cookbook-frontend-service
+spec:
+  selector:
+    app: cookbook-frontend
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  # L'Ingress gère l'exposition externe, nous n'avons plus besoin de NodePort
+  type: ClusterIP

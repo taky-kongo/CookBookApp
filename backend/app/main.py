@@ -6,7 +6,9 @@ from .api.v1 import recipes # NOUVEL IMPORT
 # Création de l'application FastAPI
 app = FastAPI(
     title=settings.PROJECT_NAME,
-    openapi_url=f"{settings.API_V1_STR}/openapi.json"
+    openapi_url=f"{settings.API_V1_STR}/openapi.json",
+    version="1.0.0",
+    root_path="/api"
 )
 
 # Configuration de CORS (Cross-Origin Resource Sharing) [cite: 74]
@@ -17,7 +19,8 @@ origins = [
     "http://localhost:5178",
     "http://127.0.0.1:5173",
     "http://127.0.0.1:5174",
-    "http://173.212.228.118:5178"
+    "http://173.212.228.118:5178",
+    "http://localhost",
 ]
 
 app.add_middleware(
@@ -36,5 +39,8 @@ def read_root():
 # Inclure les routers des différentes fonctionnalités (ex: Recettes) ici plus tard
 # app.include_router(recipe_router, prefix=settings.API_V1_STR)
 
+app.include_router(recipes.router, prefix="/v1/recipes", tags=["recipes"])
+
+
 # INCLUSION DU ROUTER DES RECETTES
-app.include_router(recipes.router, prefix=settings.API_V1_STR + "/recipes", tags=["recipes"])
+# app.include_router(recipes.router, prefix=settings.API_V1_STR + "/recipes", tags=["recipes"])

@@ -1,0 +1,26 @@
+# k8s/ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: cookbook-ingress
+spec:
+  ingressClassName: nginx
+  rules:
+  - http:
+      paths:
+      # Règle pour le backend
+      - path: /api
+        pathType: Prefix
+        backend:
+          service:
+            name: cookbook-backend-service
+            port:
+              number: 8000
+      # Règle pour le frontend
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: cookbook-frontend-service
+            port:
+              number: 80

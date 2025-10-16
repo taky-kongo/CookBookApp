@@ -23,9 +23,11 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
+import { Input } from "@/components/ui/input";
 
 const RecipeList: React.FC = () => {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
+  const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -63,6 +65,10 @@ const RecipeList: React.FC = () => {
     }
   };
 
+  const filteredRecipes = recipes.filter(recipe =>
+    recipe.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   if (loading) {
     return <div className="container mx-auto p-4 text-center">Chargement des recettes...</div>;
   }
@@ -73,21 +79,30 @@ const RecipeList: React.FC = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-4xl font-bold">My Cookbook</h1>
+      <div className="flex justify-between items-center mb-8 gap-4">
+        <h1 className="text-4xl font-bold shrink-0">My Cookbook</h1>
+        <div className="w-full max-w-md">
+          <Input
+            type="search"
+            placeholder="Rechercher une recette..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full"
+          />
+        </div>
         <AddRecipeDialog onRecipeAdded={handleRecipeAdded}>
           <Button>Ajouter une Recette</Button>
         </AddRecipeDialog>
       </div>
 
-      {recipes.length === 0 ? (
+      {filteredRecipes.length === 0 ? (
         <div className="text-center text-gray-500 py-16">
-          <p>Aucune recette trouvée.</p>
-          <p>Cliquez sur "Ajouter une Recette" pour créer votre première recette !</p>
+          <p>{recipes.length > 0 ? `Aucune recette trouvée pour "${searchTerm}".` : 'Aucune recette trouvée.'}</p>
+          {recipes.length === 0 && <p>Cliquez sur "Ajouter une Recette" pour créer votre première recette !</p>}
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {recipes.map((recipe) => (
+          {filteredRecipes.map((recipe) => (
             <Card key={recipe.id} className="flex flex-col">
               {/* On pourra ajouter une image ici plus tard */}
               <CardHeader>

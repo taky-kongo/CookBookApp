@@ -1,20 +1,28 @@
-# Étape 1: Utiliser une image Node.js légère
-FROM node:20-alpine
+# Stage 1: Build the React application
+FROM node:20-alpine AS build
 
-# Étape 2: Définir le répertoire de travail dans le conteneur
 WORKDIR /app
 
-# Étape 3: Copier les fichiers de dépendances et les installer
-# On copie ces fichiers en premier pour profiter du cache de Docker
+# Copier les fichiers de dépendances et les installer
 COPY package*.json ./
 RUN npm install
 
-# Étape 4: Copier le reste du code de l'application
+# Copier le reste du code source
 COPY . .
 
-# Étape 5: Exposer le port par défaut de Vite
-EXPOSE 5173
+# Construire l'application pour la production
+RUN npm run build
 
-# Étape 6: Définir la commande pour démarrer le serveur de développement
-# L'option --host est cruciale pour que le serveur soit accessible depuis l'extérieur du conteneur
-CMD ["npm", "run", "dev"]
+# Stage 2: Serve the static files with Nginx
+FROM nginx:1.25-alpine
+
+# Copier les fichiers construits depuis le stage 'build' vers le dossier web de Nginx
+COPY --from=build /app/dist /usr/share/nginx/html
+
+# Copier la configuration personnalisée de Nginx
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Exposer le port 80
+EXPOSE 80
+
+# La commande par défaut de l'image Nginx se chargera de démarrer le serveur.
