@@ -13,15 +13,10 @@ app = FastAPI(
 
 # Configuration de CORS (Cross-Origin Resource Sharing) [cite: 74]
 # Essentiel pour que le frontend (localhost:3000) puisse communiquer avec le backend
-origins = [
-    "http://localhost:5173",
-    "http://localhost:5174",
-    "http://localhost:5178",
-    "http://127.0.0.1:5173",
-    "http://127.0.0.1:5174",
-    "http://173.212.228.118:5178",
-    "http://localhost",
-]
+if settings.CORS_ORIGINS:
+    origins = [origin.strip() for origin in settings.CORS_ORIGINS.split(",")]
+else:
+    origins = []
 
 app.add_middleware(
     CORSMiddleware,
