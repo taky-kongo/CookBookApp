@@ -10,13 +10,21 @@ set -euo pipefail
 REPO_DIR=~/project_kub_malick
 cd "$REPO_DIR"
 
+# Allow overriding the GHCR image owner and tag via environment variables
+# Defaults match the current manifests/CI edits
+IMAGE_OWNER="${IMAGE_OWNER:-pront-Ix}"
+IMAGE_TAG="${IMAGE_TAG:-latest}"
+
+BACKEND_IMAGE="ghcr.io/${IMAGE_OWNER}/cookbook-app-backend:${IMAGE_TAG}"
+FRONTEND_IMAGE="ghcr.io/${IMAGE_OWNER}/cookbook-app-frontend:${IMAGE_TAG}"
+
 echo "Pulling images from GHCR..."
-docker pull ghcr.io/taky-kongo/cookbook-app-backend:latest
-docker pull ghcr.io/taky-kongo/cookbook-app-frontend:latest
+docker pull "$BACKEND_IMAGE"
+docker pull "$FRONTEND_IMAGE"
 
 echo "Loading images into kind..."
-kind load docker-image ghcr.io/taky-kongo/cookbook-app-backend:latest || true
-kind load docker-image ghcr.io/taky-kongo/cookbook-app-frontend:latest || true
+kind load docker-image "$BACKEND_IMAGE" || true
+kind load docker-image "$FRONTEND_IMAGE" || true
 
 echo "Applying k8s manifests..."
 kubectl apply -f ./k8s/
