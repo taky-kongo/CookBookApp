@@ -12,7 +12,7 @@ cd "$REPO_DIR"
 
 # Allow overriding the GHCR image owner and tag via environment variables
 # Defaults match the current manifests/CI edits
-IMAGE_OWNER="${IMAGE_OWNER:-pront-Ix}"
+IMAGE_OWNER="${IMAGE_OWNER:-pront-ix}"
 IMAGE_TAG="${IMAGE_TAG:-latest}"
 
 BACKEND_IMAGE="ghcr.io/${IMAGE_OWNER}/cookbook-app-backend:${IMAGE_TAG}"

@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: ghcr.io/pront-Ix/cookbook-app-frontend:latest
+          image: ghcr.io/pront-ix/cookbook-app-frontend:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 80
