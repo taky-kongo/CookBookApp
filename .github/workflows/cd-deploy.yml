@@ -18,6 +18,15 @@ jobs:
       - name: Wait for images to be available
         run: echo "Images built and pushed. Proceeding to deploy..."
 
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Debug workspace contents
+        run: |
+          echo "Workspace: $GITHUB_WORKSPACE"
+          ls -la
+          ls -la deploy || true
+
       - name: Copy deployment script to VPS and execute
         uses: appleboy/scp-action@v0.1.6
         with:
