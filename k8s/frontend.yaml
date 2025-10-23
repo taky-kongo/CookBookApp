@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: cookbook-app-frontend:latest
+          image: ghcr.io/taky-kongo/cookbook-app-frontend:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 80

@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: cookbook-app-backend:latest # Image chargée précédemment
+          image: ghcr.io/taky-kongo/cookbook-app-backend:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8000
