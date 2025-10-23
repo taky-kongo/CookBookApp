@@ -23,12 +23,26 @@ spec:
           ports:
             - containerPort: 8000
           env:
-            # CORRECTION CRUCIALE : La DATABASE_URL complète est requise par Pydantic/Settings
-            # Le format est : postgresql+psycopg2://USER:PASSWORD@SERVICE_NAME:PORT/DB_NAME
-            # Nous utilisons les valeurs définies dans le Secret et le Service K8s.
+            # Injecter les variables requises par Settings via le Secret et le Service
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: POSTGRES_PASSWORD
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: POSTGRES_DB
+            - name: POSTGRES_SERVER
+              value: "postgres-service"
+            # Valeur alternative complète si nécessaire
             - name: DATABASE_URL
-              # NOTE : C'est la façon la plus simple de le définir dans le YAML K8s sans Templating.
-              # Assurez-vous que ces valeurs correspondent à celles de k8s/config.yaml Secret.
               value: "postgresql+psycopg2://cookbook_user:strong_password@postgres-service:5432/cookbook_db"
             
             # Suppression des variables POSTGRES_* individuelles pour éviter la redondance

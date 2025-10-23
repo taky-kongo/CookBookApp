@@ -25,7 +25,7 @@ spec:
             - name: VITE_API_URL
               valueFrom:
                 configMapKeyRef:
-                  name: app-config
+                  name: cookbook-config
                   key: API_V1_URL
 
 ---
