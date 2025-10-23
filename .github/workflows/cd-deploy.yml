@@ -28,12 +28,22 @@ jobs:
           ls -la deploy || true
 
       - name: Prepare SSH key file
-        if: ${{ secrets.VPS_SSH_KEY != '' }}
         run: |
+          # Use a shell check because referencing secrets in 'if' at workflow parse time is not supported
+          if [ -z "${{ secrets.VPS_SSH_KEY }}" ]; then
+            echo "No VPS_SSH_KEY provided; skipping key setup"
+            exit 0
+          fi
           echo "Writing SSH key to runner temp"
           mkdir -p "$RUNNER_TEMP/.ssh"
-          # Try to decode base64, fallback to raw
-          echo "${{ secrets.VPS_SSH_KEY }}" | base64 -d > "$RUNNER_TEMP/.ssh/deploy_key" 2>/dev/null || echo "${{ secrets.VPS_SSH_KEY }}" > "$RUNNER_TEMP/.ssh/deploy_key"
+          # Try to decode base64; if decoding fails, write raw secret
+          if echo "${{ secrets.VPS_SSH_KEY }}" | base64 -d > "$RUNNER_TEMP/.ssh/deploy_key" 2>/dev/null; then
+            echo "Decoded base64 SSH key"
+          else
+            printf '%s
+' "${{ secrets.VPS_SSH_KEY }}" > "$RUNNER_TEMP/.ssh/deploy_key"
+            echo "Wrote raw SSH key"
+          fi
           chmod 600 "$RUNNER_TEMP/.ssh/deploy_key"
 
       - name: Copy deployment script to VPS and execute
