@@ -1,0 +1,27 @@
+name: Deploy to VPS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Deploy to VPS
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            cd /var/www/project_kub_malick || exit
+            git pull origin main
+            kubectl apply -f k8s/config.yaml
+            kubectl apply -f k8s/backend.yaml
+            kubectl apply -f k8s/frontend.yaml
+            kubectl apply -f k8s/ingress.yaml
