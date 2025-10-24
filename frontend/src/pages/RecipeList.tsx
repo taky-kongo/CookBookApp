@@ -91,7 +91,7 @@ const RecipeList: React.FC = () => {
           />
         </div>
         <AddRecipeDialog onRecipeAdded={handleRecipeAdded}>
-          <Button>Ajouteeeeer une Recette</Button>
+          <Button>Ajouter une Recette</Button>
         </AddRecipeDialog>
       </div>
 
@@ -111,7 +111,7 @@ const RecipeList: React.FC = () => {
               </CardHeader>
               <CardContent className="flex-grow">
                 <p className="text-sm text-muted-foreground">
-                  Temps de préparationnnnn : {recipe.prep_time || 'N/A'} min
+                  Temps de préparation : {recipe.prep_time || 'N/A'} min
                 </p>
               </CardContent>
               <CardFooter className="flex justify-end gap-2">

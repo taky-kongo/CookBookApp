@@ -10,10 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v4
 
       - name: Deploy to VPS
-        uses: appleboy/ssh-action@v0.1.6
+        uses: appleboy/ssh-action@v0.1.4
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
@@ -21,7 +21,9 @@ jobs:
           script: |
             cd /var/www/project_kub_malick
             git pull origin main
-            kubectl apply -f k8s/config.yaml
-            kubectl apply -f k8s/backend.yaml
-            kubectl apply -f k8s/frontend.yaml
-            kubectl apply -f k8s/ingress.yaml
+            docker build -t cookbook-app-backend:latest ./backend
+            docker build -t cookbook-app-frontend:latest ./frontend
+            kind load docker-image cookbook-app-backend:latest
+            kind load docker-image cookbook-app-frontend:latest
+            kubectl rollout restart deployment cookbook-backend-deployment
+            kubectl rollout restart deployment cookbook-frontend-deployment

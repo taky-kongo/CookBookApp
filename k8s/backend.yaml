@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: ghcr.io/pront-ix/cookbook-app-backend:latest
+          image: cookbook-app-backend:latest # Image chargée précédemment
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8000
