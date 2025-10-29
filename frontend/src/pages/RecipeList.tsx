@@ -91,7 +91,7 @@ const RecipeList: React.FC = () => {
           />
         </div>
         <AddRecipeDialog onRecipeAdded={handleRecipeAdded}>
-          <Button>Ajouteer une Recette</Button>
+          <Button>Ajouter une Recette</Button>
         </AddRecipeDialog>
       </div>
 
