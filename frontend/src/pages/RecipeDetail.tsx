@@ -72,7 +72,7 @@ const RecipeDetail: React.FC = () => {
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="flex gap-8 text-sm text-muted-foreground">
-            <span>Temps de préparation : {recipe.prep_time || 'N/A'} min</span>
+            <span>Temps de préparation : {recipe.prep_time || 'N/A'} mins</span>
             {/* Vous pouvez ajouter d'autres infos comme cook_time, servings ici */}
           </div>
 
