@@ -12,6 +12,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+
       - name: Deploy to VPS
         uses: appleboy/ssh-action@v0.1.4
         with:
