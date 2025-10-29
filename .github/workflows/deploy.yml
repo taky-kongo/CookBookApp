@@ -18,6 +18,7 @@ jobs:
         with:
           node-version: '20'
 
+
       - name: Install frontend dependencies
         working-directory: frontend
         run: |
