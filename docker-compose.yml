@@ -57,6 +57,7 @@ services:
       VITE_API_URL: http://localhost:8008/api/v1 
     depends_on:
       - backend
+      
 
 volumes:
   postgres_data:
